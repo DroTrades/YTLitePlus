@@ -19,6 +19,9 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y git clang make dpkg curl devscripts
+          echo "Verifying devscripts installation:"
+          dpkg -l | grep devscripts || echo "devscripts not found"
+          which dm.pl || echo "dm.pl not found"
 
       - name: Install Theos
         run: |
