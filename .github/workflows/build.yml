@@ -23,6 +23,17 @@ jobs:
           dpkg -l | grep devscripts || echo "devscripts not found"
           which dm.pl || echo "dm.pl not found"
 
+      - name: Fix dm.pl path
+        run: |
+          DMPL_PATH=$(find /usr -name dm.pl | head -n 1)
+          echo "Found dm.pl at: $DMPL_PATH"
+          if [ -n "$DMPL_PATH" ]; then
+            sudo ln -sf "$DMPL_PATH" /usr/bin/dm.pl
+          else
+            echo "dm.pl not found anywhere"
+            exit 1
+          fi
+
       - name: Install Theos
         run: |
           git clone --depth=1 https://github.com/theos/theos.git $HOME/theos
