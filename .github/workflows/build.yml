@@ -49,11 +49,19 @@ jobs:
       - name: Make build script executable
         run: chmod +x ./build.sh
 
-      - name: Run build script
-        run: ./build.sh YouTube.ipa
+      - name: List root files before build
+        run: ls -la
 
-      - name: List contents of packages folder
-        run: ls -la YTLitePlus/packages || echo "No packages folder found"
+      - name: List YTLitePlus directory before build
+        run: ls -la YTLitePlus || echo "YTLitePlus folder missing"
+
+      - name: Run build script with output
+        run: |
+          set -x
+          ./build.sh YouTube.ipa
+
+      - name: List YTLitePlus/packages after build
+        run: ls -la YTLitePlus/packages || echo "No packages folder found after build"
 
       - name: Upload patched IPA
         uses: actions/upload-artifact@v4
