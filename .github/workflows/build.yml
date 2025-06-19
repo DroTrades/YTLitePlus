@@ -15,17 +15,18 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
 
-      - name: Download IPA
+      - name: Download decrypted IPA
         run: |
           curl -L "${{ github.event.inputs.ipa_url }}" -o YouTube.ipa
 
-      - name: Run patch script
-        run: |
-          chmod +x patch.sh
-          ./patch.sh YouTube.ipa
+      - name: Make build script executable
+        run: chmod +x ./build.sh
+
+      - name: Run build script
+        run: ./build.sh YouTube.ipa
 
       - name: Upload patched IPA
         uses: actions/upload-artifact@v4
         with:
           name: YTLitePlus
-          path: YTLitePlus.ipa
+          path: YTLitePlus/packages/*.ipa
