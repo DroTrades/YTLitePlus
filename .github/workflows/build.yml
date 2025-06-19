@@ -25,6 +25,10 @@ jobs:
       - name: Run build script
         run: ./build.sh YouTube.ipa
 
+        - name: List contents of YTLitePlus/packages
+  run: ls -la YTLitePlus/packages || echo "Directory not found"
+
+
       - name: Upload patched IPA
         uses: actions/upload-artifact@v4
         with:
