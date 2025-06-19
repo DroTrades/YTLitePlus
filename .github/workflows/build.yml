@@ -18,7 +18,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y git clang ldid make dpkg curl
+          sudo apt-get install -y git clang make dpkg curl
 
       - name: Install Theos
         run: |
