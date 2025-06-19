@@ -11,6 +11,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
@@ -23,16 +24,17 @@ jobs:
           dpkg -l | grep devscripts || echo "devscripts not found"
           which dm.pl || echo "dm.pl not found"
 
-      - name: Fix dm.pl path
+      - name: Manual install of dm.pl (if missing)
         run: |
-          DMPL_PATH=$(find /usr -name dm.pl | head -n 1)
-          echo "Found dm.pl at: $DMPL_PATH"
-          if [ -n "$DMPL_PATH" ]; then
-            sudo ln -sf "$DMPL_PATH" /usr/bin/dm.pl
+          if ! command -v dm.pl > /dev/null; then
+            echo "dm.pl missing, installing manually..."
+            curl -Lo dm.pl https://raw.githubusercontent.com/Debian/debian-goodies/master/dm.pl
+            sudo mv dm.pl /usr/bin/dm.pl
+            sudo chmod +x /usr/bin/dm.pl
           else
-            echo "dm.pl not found anywhere"
-            exit 1
+            echo "dm.pl found, skipping manual install"
           fi
+          which dm.pl
 
       - name: Install Theos
         run: |
