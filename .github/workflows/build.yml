@@ -15,9 +15,20 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v2
 
-      - name: Download decrypted IPA
+      - name: Install dependencies
         run: |
-          curl -L "${{ github.event.inputs.ipa_url }}" -o YouTube.ipa
+          sudo apt-get update
+          sudo apt-get install -y git clang ldid make dpkg curl
+
+      - name: Install Theos
+        run: |
+          git clone --depth=1 https://github.com/theos/theos.git $HOME/theos
+          echo "THEOS=$HOME/theos" >> $GITHUB_ENV
+          echo "PATH=$THEOS/bin:$PATH" >> $GITHUB_ENV
+          echo "THEOS_MAKE_PATH=$HOME/theos/makefiles" >> $GITHUB_ENV
+
+      - name: Download decrypted IPA
+        run: curl -L "${{ github.event.inputs.ipa_url }}" -o YouTube.ipa
 
       - name: Make build script executable
         run: chmod +x ./build.sh
@@ -25,9 +36,8 @@ jobs:
       - name: Run build script
         run: ./build.sh YouTube.ipa
 
-        - name: List contents of YTLitePlus/packages
-  run: ls -la YTLitePlus/packages || echo "Directory not found"
-
+      - name: List contents of packages folder
+        run: ls -la YTLitePlus/packages || echo "No packages folder found"
 
       - name: Upload patched IPA
         uses: actions/upload-artifact@v4
